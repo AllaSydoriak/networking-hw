@@ -1,35 +1,27 @@
-import pkg from 'sequelize';
-import sequelize from './index.js';
+import Sequelize from 'sequelize';
+import sequelizeConnection from './index.js';
 
 // Models
-import Order from './Order';
+import OrderItem from './OrderItem.js';
 
-const { Model, DataTypes } = pkg;
-
-class Item extends Model {};
-
-Item.init({
+const Item = sequelizeConnection.define('Item', {
     id: {
-        type: DataTypes.INTEGER,
+        type: Sequelize.INTEGER,
         autoIncrement: true,
         primaryKey: true,
         allowNull: false,
     },
     name: {
-        type: DataTypes.TEXT,
+        type: Sequelize.TEXT,
         validate: {
             len: [0, 100],
         },
     },
     price: {
-        type: DataTypes.NUMBER,
+        type: Sequelize.NUMBER,
     }
-}, {
-    sequelize,
-    modelName: 'Item',
-    tableName: 'Item',
-});
+}, { tableName: 'Item' });
 
-Item.belongsToMany(Order, { through: 'OrderItem', foreignKey: 'itemId', otherKey: 'orderId' });
+Item.hasMany(OrderItem, { foreignKey: 'itemId' });
 
 export default Item;

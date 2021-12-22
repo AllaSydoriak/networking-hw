@@ -1,29 +1,23 @@
-import pkg from 'sequelize';
-import sequelize from './index.js';
+import Sequelize from 'sequelize';
+import sequelizeConnection from './index.js';
 
 // Models
 import User from './User.js';
+import OrderItem from './OrderItem.js';
 
-const { Model, DataTypes } = pkg;
-
-class Order extends Model {};
-
-Order.init({
+const Order = sequelizeConnection.define('Order', {
     id: {
-        type: DataTypes.INTEGER,
+        type: Sequelize.INTEGER,
         autoIncrement: true,
         primaryKey: true,
         allowNull: false,
     },
     status: {
-        type: DataTypes.ENUM(['PENDING', 'CANCELLED', 'COMPLETE']),
+        type: Sequelize.ENUM('PENDING', 'CANCELLED', 'COMPLETE'),
     },
-}, {
-    sequelize,
-    modelName: 'Order',
-    tableName: 'Order',
-});
+}, { tableName: 'Order' });
 
-Order.belongsTo(User);
+Order.belongsTo(User, { foreignKey: 'userId' });
+Order.hasMany(OrderItem, { foreignKey: 'orderId' });
 
 export default Order;

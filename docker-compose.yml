@@ -1,0 +1,11 @@
+version: '1'
+
+services:
+  db:
+    image: keinos/sqlite3:latest
+    container_name: sqlite
+    env_file: .env
+    ports:
+      - 80:8080
+    volumes:
+      - .:/app
